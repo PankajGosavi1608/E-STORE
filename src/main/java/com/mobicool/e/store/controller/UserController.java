@@ -18,6 +18,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
     /**
      * @author Pankaj Gosavi
      * @apiNote This Api is to create user
@@ -44,9 +45,9 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable("userId") String userId, @RequestBody UserDto userDto) {
-        log.info("Starting request to update new User :" +userId);
+        log.info("Starting request to update new User :",userId);
         UserDto updatedUserDto = userService.updateUser(userDto, userId);
-        log.info("Completed request to update new User  :" +userId);
+        log.info("Completed request to update new User  :",userId);
         return new ResponseEntity<>(updatedUserDto, HttpStatus.OK);
 
     }
@@ -59,7 +60,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable String userId) {
-        log.info("Starting request to delete User with userId: " +userId);
+        log.info("Starting request to delete User with userId: ",userId);
         userService.deleteUser(userId);
         ApiResponse message = ApiResponse
                 .builder()
