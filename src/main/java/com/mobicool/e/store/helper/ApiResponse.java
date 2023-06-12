@@ -1,16 +1,14 @@
 package com.mobicool.e.store.helper;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.http.HttpStatus;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class ApiResponse {
     private String message;
     private boolean status;
+    private boolean success;
 }

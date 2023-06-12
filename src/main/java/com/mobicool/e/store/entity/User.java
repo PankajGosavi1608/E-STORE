@@ -23,12 +23,12 @@ public class User {
     @Column(name="User_Email",unique = true)
     private String email;
 
-    @Column(name="User_Password",length = 10)
+    @Column(name="User_Password")
     private String password;
 
     private String gender;
 
-    @Column(name="About",length = 1000)
+    @Column(name="About")
     private String about;
 
     @Column(name = "user_image_name")

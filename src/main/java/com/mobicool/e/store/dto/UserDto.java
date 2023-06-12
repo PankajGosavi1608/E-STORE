@@ -19,19 +19,19 @@ public class UserDto {
 
     private String userId;
 
-    @Size(min=3,max=15,message="invalid name")
+    @Size(min = 3, max = 15, message = "invalid name")
     private String name;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+   // @Email(message = "Invalid email format")
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", message = "Invalid email format")
     private String email;
 
     @ImageNameValid(message = "Image name not valid ..")
     private String imageName;
 
-    @NotBlank(message="Write something about yourself")
-    @Size(min=25,max=250)
+    @NotBlank(message = "Write something about yourself")
+    @Size(min = 25, max = 250)
     private String about;
 
     @NotBlank(message = "Password is required")
@@ -39,12 +39,12 @@ public class UserDto {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]+$", message = "Invalid password format")
     private String password;
 
-    @Size(min=4,max=6,message="Invalid Gender")
+    @Size(min = 4, max = 6, message = "Invalid Gender")
     private String gender;
 
 }
 
-
+//Password Note
 /*At least one letter (uppercase or lowercase) is required ((?=.*[A-Za-z]))
 At least one digit is required ((?=.*\\d))
 Special characters are allowed: @$!%*#?&

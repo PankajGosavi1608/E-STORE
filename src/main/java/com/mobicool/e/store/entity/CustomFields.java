@@ -30,8 +30,7 @@ public class CustomFields implements Serializable {
     @Column(name = "modified_by")
     private String modifiedBy;
     @UpdateTimestamp
-    @Column(name="modified_date",updatable = false)
+    @Column(name = "modified_date", updatable = false)
     private LocalDateTime modifiedOn;
-
 
 }

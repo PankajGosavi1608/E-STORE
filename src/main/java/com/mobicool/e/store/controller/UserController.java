@@ -55,7 +55,7 @@ public class UserController {
      * @author Pankaj Gosavi
      * @ApiNote This API is used to Update user
      */
-    @PutMapping("/{userId}/userId")
+    @PutMapping("/{userId}/userId") //url change
     public ResponseEntity<UserDto> updateUser(@Valid @PathVariable("userId") String userId, @RequestBody UserDto userDto) {
         log.info("Request Starting for service layer to update user");
         UserDto updatedUserDto = userService.updateUser(userDto, userId);
@@ -89,7 +89,7 @@ public class UserController {
      * @ApiNote This API is used to GetAllUser Information
      */
     @GetMapping
-    public ResponseEntity<PageableResponse<UserDto>> getAllUsers(
+    public ResponseEntity<PageableResponse<UserDto>> getAllUsers( //app constants
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @RequestParam(value = "PageSize", defaultValue = "10", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "name", required = false) String sortBy,
@@ -143,7 +143,7 @@ public class UserController {
      * @return
      * @throws IOException
      */
-    @PostMapping("/image/{userId}")
+    @PostMapping("/image/{userId}") // userimage appconstnst
     public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile image, @PathVariable String userId) throws IOException {
         {
             String imageName = fileService.uploadFile(image, imageUploadPath);
