@@ -52,7 +52,7 @@ public class UserController {
      * @author Rinku Patil
      * @ApiNote This API is used to Update user
      */
-    @PutMapping("/{userId}")
+    @PutMapping("/{userId}/userId")
     public ResponseEntity<UserDto> updateUser(@Valid @PathVariable("userId") String userId, @RequestBody UserDto userDto) {
         log.info("Request Starting for service layer to update user");
         UserDto updatedUserDto = userService.updateUser(userDto, userId);
@@ -63,7 +63,7 @@ public class UserController {
     /**
      * @param userId
      * @return
-     * @author Rinku Patil
+     * @author Pankaj Gosavi
      * @ApiNote This API is used to Delete user
      */
     @DeleteMapping("/{userId}")
@@ -82,7 +82,7 @@ public class UserController {
 
     /**
      * @return
-     * @author Rinku Patil
+     * @author Pankaj Gosavi
      * @ApiNote This API is used to GetAllUser Information
      */
     @GetMapping
@@ -99,7 +99,7 @@ public class UserController {
     /**
      * @param userId
      * @return
-     * @author Rinku Patil
+     * @author Pankaj Gosavi
      * @ApiNote This API is used to Get Single User by Id
      */
     @GetMapping("/{userId}")
@@ -112,7 +112,7 @@ public class UserController {
     /**
      * @param email
      * @return
-     * @author Rinku Patil
+     * @author Pankaj Gosavi
      * @ApiNote This API is used to Get User By Email
      */
     @GetMapping("/email/{email}")
@@ -123,7 +123,7 @@ public class UserController {
     /**
      * @param keywords
      * @return
-     * @author Rinku Patil
+     * @author Pankaj Gosavi
      * @ApiNote This API is used to Search user
      */
     @GetMapping("/search/{keywords}")
