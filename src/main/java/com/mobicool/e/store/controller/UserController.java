@@ -22,10 +22,13 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private FileService fileService;
+
     @Value("${user.profile.image.path}")
     private String imageUploadPath;
 
@@ -49,7 +52,7 @@ public class UserController {
      * @param userId
      * @param userDto
      * @return
-     * @author Rinku Patil
+     * @author Pankaj Gosavi
      * @ApiNote This API is used to Update user
      */
     @PutMapping("/{userId}/userId")
@@ -81,8 +84,8 @@ public class UserController {
     }
 
     /**
-     * @return
      * @author Pankaj Gosavi
+     * @return
      * @ApiNote This API is used to GetAllUser Information
      */
     @GetMapping
@@ -97,9 +100,9 @@ public class UserController {
     }
 
     /**
+     * @author Pankaj Gosavi
      * @param userId
      * @return
-     * @author Pankaj Gosavi
      * @ApiNote This API is used to Get Single User by Id
      */
     @GetMapping("/{userId}")
@@ -133,6 +136,13 @@ public class UserController {
         return new ResponseEntity<>(userService.searchUser(keywords), HttpStatus.OK);
     }
 
+    /**
+     * @author Pankaj Gosavi
+     * @param image
+     * @param userId
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/image/{userId}")
     public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile image, @PathVariable String userId) throws IOException {
         {
