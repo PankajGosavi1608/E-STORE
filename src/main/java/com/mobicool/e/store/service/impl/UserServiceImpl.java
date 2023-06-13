@@ -1,5 +1,6 @@
 package com.mobicool.e.store.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.mobicool.e.store.dto.PageableResponse;
 import com.mobicool.e.store.dto.UserDto;
 import com.mobicool.e.store.entity.User;
@@ -13,12 +14,19 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,6 +39,9 @@ public class UserServiceImpl implements UserService {
     private UserRepo userRepo;
     @Autowired
     private ModelMapper mapper;
+
+    @Value("@{user.profile.image.path}")
+    private String imagePath;
 
     public UserDto createUser(UserDto userDto) {
         logger.info(" Initiated Request for creating user");
@@ -67,7 +78,19 @@ public class UserServiceImpl implements UserService {
 
         User user = this.userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE, userId, userId));
-
+        //delete user profile image
+        //image/user/abc.png
+        String fullPath = imagePath + user.getImageName();
+       try{
+        Path path= Paths.get(fullPath);
+        Files.delete(path);
+          }
+       catch (NoSuchFileException ex){
+           logger.info("User image not found in folder");
+           ex.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
         logger.info(" Completed Request  for deleting user with userId :{}", userId);
 
         this.userRepo.delete(user);

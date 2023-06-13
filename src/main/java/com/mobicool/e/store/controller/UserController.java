@@ -4,6 +4,7 @@ import com.mobicool.e.store.dto.ApiResponseMessage;
 import com.mobicool.e.store.dto.ImageResponse;
 import com.mobicool.e.store.dto.PageableResponse;
 import com.mobicool.e.store.dto.UserDto;
+import com.mobicool.e.store.helper.ApiConstants;
 import com.mobicool.e.store.service.FileService;
 import com.mobicool.e.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +50,10 @@ public class UserController {
     }
 
     /**
+     * @author Pankaj Gosavi
      * @param userId
      * @param userDto
      * @return
-     * @author Pankaj Gosavi
      * @ApiNote This API is used to Update user
      */
     @PutMapping("/{userId}/userId") //url change
@@ -64,9 +65,9 @@ public class UserController {
     }
 
     /**
+     * @author Pankaj Gosavi
      * @param userId
      * @return
-     * @author Pankaj Gosavi
      * @ApiNote This API is used to Delete user
      */
     @DeleteMapping("/{userId}")
@@ -90,10 +91,10 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<PageableResponse<UserDto>> getAllUsers( //app constants
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-            @RequestParam(value = "PageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "name", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+            @RequestParam(value = "PageNumber", defaultValue = ApiConstants.PAGE_NUMBER, required = false) int pageNumber,
+            @RequestParam(value = "PageSize", defaultValue = ApiConstants.PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = ApiConstants.SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = ApiConstants.SORT_DIRECTION, required = false) String sortDir
     ) {
         log.info("Request  for service layer to get All user ");
         return new ResponseEntity<>(userService.getAllUser(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
@@ -113,9 +114,9 @@ public class UserController {
     }
 
     /**
+     * @author Pankaj Gosavi
      * @param email
      * @return
-     * @author Pankaj Gosavi
      * @ApiNote This API is used to Get User By Email
      */
     @GetMapping("/email/{email}")
@@ -124,9 +125,9 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
     }
     /**
+     * @author Pankaj Gosavi
      * @param keywords
      * @return
-     * @author Pankaj Gosavi
      * @ApiNote This API is used to Search user
      */
     @GetMapping("/search/{keywords}")
@@ -144,7 +145,7 @@ public class UserController {
      * @throws IOException
      */
     @PostMapping("/image/{userId}") // userimage appconstnst
-    public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile image, @PathVariable String userId) throws IOException {
+    public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam(ApiConstants.USER_IMAGE) MultipartFile image, @PathVariable String userId) throws IOException {
         {
             String imageName = fileService.uploadFile(image, imageUploadPath);
             UserDto user = userService.getUserById(userId);
