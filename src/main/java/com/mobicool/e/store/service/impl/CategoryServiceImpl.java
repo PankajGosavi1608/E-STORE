@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
         return mapper.map(savedCategory,CategoryDto.class);
     }
 
-   @Override
+   @Override // method pending
     public CategoryDto update(CategoryDto categoryDto, String categoryId) {
         //get category of given id
         /*Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("category not found exception"));
