@@ -9,24 +9,34 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
+@Table(name="products")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories")
-public class Category {
+public class Product {
     @Id
-    @Column(name = "id")
-    private String categoryId;
-
-    @Column(name = "category_title", length = 60, nullable = false)
+    private String productId;
+    @Column(length=10000)
     private String title;
 
-    @Column(name = "category_desc", length = 500)
+
     private String description;
 
-    private String coverImage;
+    private Double price;
+
+    private Double discountedPrice;
+
+    private Long quantity;
+
+    private Date addedDate;
+
+    private boolean live;
+
+    private boolean stock;
+
 
 }
