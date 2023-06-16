@@ -13,8 +13,8 @@ public class CategoryDto {
     @NotBlank(message = "Category ID is required")
     private String categoryId;
 
-    @NotBlank(message = "Title is required")
-    @Size(min=10,max = 100, message = "Title cannot exceed 100 characters")
+    @NotBlank(message = "Title is required with min 5 letters")
+    @Size(min=5,max = 100, message = "Title cannot exceed 100 characters")
     private String title;
 
     @NotBlank(message = "Description is required")
