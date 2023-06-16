@@ -22,4 +22,7 @@ public class ResourceNotFoundException extends RuntimeException {
         this.fieldvalue = fieldvalue;
 
     }
+
+    /*public ResourceNotFoundException(String categoryId) {
+    }*/
 }

@@ -20,15 +20,19 @@ import java.time.LocalDateTime;
 public class CustomFields implements Serializable {
     @Column(name = "is_active")
     private String isActive;
+
     @CreatedBy
     @Column(name = "created_by")
     private String createdBy;
+
     @CreationTimestamp
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdOn;
+
     @LastModifiedBy
     @Column(name = "modified_by")
     private String modifiedBy;
+
     @UpdateTimestamp
     @Column(name = "modified_date", updatable = false)
     private LocalDateTime modifiedOn;
