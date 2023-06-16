@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, String userId) {
         logger.info(" Initiated Request  for updating user with userId :{}", userId);
         User user = this.userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE, userId, userId));
+                .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE +userId));
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         logger.info(" Initiated Request  for deleting user with userId :{}", userId);
 
         User user = this.userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE, userId, userId));
+                .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE +userId));
         //delete user profile image
         //image/user/abc.png
         String fullPath = imagePath + user.getImageName();
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         logger.info(" Initiated Request  for getting user with userId :{}", userId);
 
         User user = this.userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE, userId, userId));
+                .orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE +userId));
         logger.info(" Completed Request  for getting user with userId :{}", userId);
         return entityToDto(user);
     }
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     public UserDto getUserByEmail(String email) {
         User user = userRepo.findByEmail(email).
-                orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE, email, email));
+                orElseThrow(() -> new ResourceNotFoundException(ApiConstants.EXCEPTION_MESSAGE +email));
 
         return entityToDto(user);
     }
@@ -135,15 +135,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto entityToDto(User savedUser) {
-//        UserDto userDto=UserDto.builder()
-//                .id(savedUser.getId())
-//                .name(savedUser.getName())
-//                .email(savedUser.getEmail())
-//                .password(savedUser.getPassword())
-//                .about(savedUser.getAbout())
-//                .gender(savedUser.getGender())
-//                .imageName(savedUser.getImageName()).build();
-//                return userDto;
 
         return mapper.map(savedUser, UserDto.class);
     }
