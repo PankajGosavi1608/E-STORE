@@ -92,5 +92,4 @@ public class ProductController {
         return new ResponseEntity<>(pageableResponse,HttpStatus.OK);
     }
 
-
 }
