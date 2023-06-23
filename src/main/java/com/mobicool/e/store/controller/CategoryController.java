@@ -3,6 +3,7 @@ package com.mobicool.e.store.controller;
 import com.mobicool.e.store.dto.ApiResponseMessage;
 import com.mobicool.e.store.dto.CategoryDto;
 import com.mobicool.e.store.dto.PageableResponse;
+import com.mobicool.e.store.helper.ApiConstants;
 import com.mobicool.e.store.helper.ApiResponse;
 import com.mobicool.e.store.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,8 @@ public class CategoryController
     {
         categoryService.delete(categoryId);
 
-        ApiResponseMessage responseMessage = ApiResponseMessage.builder().message("category deleted successfully").status(HttpStatus.OK).success(true).build();
+        ApiResponseMessage responseMessage = ApiResponseMessage.builder()
+                .message(ApiConstants.CATEGORY_DELETED).status(HttpStatus.OK).success(true).build();
         return new ResponseEntity<>(responseMessage,HttpStatus.OK);
     }
 
