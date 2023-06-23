@@ -42,6 +42,9 @@ public class UserDto {
     @Size(min = 4, max = 6, message = "Invalid Gender")
     private String gender;
 
+    @ImageNameValid
+    private String image;
+
 }
 
 //Password Note

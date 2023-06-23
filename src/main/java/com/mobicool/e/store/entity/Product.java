@@ -38,5 +38,7 @@ public class Product {
 
     private boolean stock;
 
+    private String productImageName;
+
 
 }

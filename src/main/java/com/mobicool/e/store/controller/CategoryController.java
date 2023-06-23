@@ -19,8 +19,14 @@ public class CategoryController
 {
     @Autowired
     private CategoryService categoryService;
-    // create
 
+    // create
+    /**
+     * @author Pankaj Gosavi
+     * @param categoryDto
+     * @return
+     * @apiNote This API is used to create category
+     */
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto)
     {
@@ -30,6 +36,13 @@ public class CategoryController
         return new ResponseEntity<>(categoryDto1, HttpStatus.CREATED);
     }
     //update
+    /**
+     * @author Pankaj Gosavi
+     * @param categoryDto
+     * @param categoryId
+     * @return
+     * @apiNote This API is used to update category
+     */
 @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryDto> updateCategory(
             @PathVariable String categoryId,
@@ -40,6 +53,13 @@ public class CategoryController
     }
 
     //delete
+    /**
+     * @author Pankaj Gosavi
+     * @param categoryId
+     * @return
+     * @apiNote This API is used to delete category
+     */
+
     @DeleteMapping
     public ResponseEntity<ApiResponseMessage> deleteCategory(@PathVariable String categoryId)
     {
@@ -50,6 +70,17 @@ public class CategoryController
     }
 
     //Get All Category
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to get all category
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
+
     @GetMapping
     public ResponseEntity<PageableResponse<CategoryDto>> getAllCategory(
             @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
@@ -62,6 +93,13 @@ public class CategoryController
     }
 
     //get Single Category
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to get single category
+     * @param categoryId
+     * @return
+     */
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDto> getSingleCategory(@PathVariable String categoryId){
 

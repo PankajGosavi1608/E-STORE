@@ -21,5 +21,7 @@ public interface UserService {
     PageableResponse<UserDto> getAllUser(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     List<UserDto> searchUser(String keywords);
+
+
 }
 

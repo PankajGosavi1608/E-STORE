@@ -1,15 +1,19 @@
 package com.mobicool.e.store.controller;
 
 import com.mobicool.e.store.dto.ApiResponseMessage;
+import com.mobicool.e.store.dto.ImageResponse;
 import com.mobicool.e.store.dto.PageableResponse;
 import com.mobicool.e.store.dto.ProductDto;
-import com.mobicool.e.store.entity.Product;
-import com.mobicool.e.store.helper.ApiResponse;
+import com.mobicool.e.store.service.FileService;
 import com.mobicool.e.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/products")
@@ -18,7 +22,20 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private FileService fileService;
+
+    @Value("${product.image.path}")
+    private String imagePath;
+
     //create
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to create product
+     * @param productDto
+     * @return
+     */
 
     @PostMapping("/")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto)
@@ -28,6 +45,14 @@ public class ProductController {
     }
 
     //update
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to update product
+     * @param productId
+     * @param productDto
+     * @return
+     */
     @PutMapping("/{productId}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable String productId,@RequestBody ProductDto productDto)
     {
@@ -36,7 +61,14 @@ public class ProductController {
     }
 
     //delete
-    @DeleteMapping("/{productId")
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to delete product
+     * @param productId
+     * @return
+     */
+    @DeleteMapping("/{productId}")
     public ResponseEntity <ApiResponseMessage> delete(@PathVariable String productId)
     {
         productService.delete(productId);
@@ -45,6 +77,13 @@ public class ProductController {
     }
 
     //get single
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to get product
+     * @param productId
+     * @return
+     */
     @GetMapping("/{productId}")
     public ResponseEntity <ProductDto> getProduct(@PathVariable String productId)
     {
@@ -54,6 +93,16 @@ public class ProductController {
 
 
     //get all
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to get all products
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
     @GetMapping
     public ResponseEntity<PageableResponse<ProductDto>> getAll(
             @RequestParam(value="pageNumber",defaultValue = "0",required = false) int pageNumber,
@@ -66,6 +115,16 @@ public class ProductController {
     }
 
     //get all live
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to get all live products
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
 
     @GetMapping("/live")
     public ResponseEntity<PageableResponse<ProductDto>> getAllLive(
@@ -80,6 +139,17 @@ public class ProductController {
 
     //search all
 
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to search product
+     * @param query
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
+
     @GetMapping("/search/{query}")
     public ResponseEntity<PageableResponse<ProductDto>> searchProduct(
             @PathVariable String query,
@@ -90,6 +160,31 @@ public class ProductController {
     {
         PageableResponse<ProductDto> pageableResponse = productService.searchByTitle(query,pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(pageableResponse,HttpStatus.OK);
+    }
+
+    //Upload Image
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to upload product image
+     * @param productId
+     * @param image
+     * @return
+     * @throws IOException
+     */
+
+    @PostMapping("/image/{productId}")
+    public ResponseEntity<ImageResponse> uploadProductImage(
+            @PathVariable String productId,
+            @RequestParam("productImage")MultipartFile image
+            ) throws IOException {
+        String fileName = fileService.uploadFile(image, imagePath);
+        ProductDto productDto = productService.get(productId);
+        productDto.setProductImageName(fileName);
+        ProductDto updatedProduct = productService.update(productDto, productId);
+        ImageResponse response = ImageResponse.builder().imageName(updatedProduct.getProductImageName())
+                .message("Product image is successfully Uploaded").status(HttpStatus.CREATED).success(true).build();
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
 }

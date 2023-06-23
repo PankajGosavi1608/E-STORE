@@ -11,11 +11,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -32,13 +38,14 @@ public class UserController {
 
     @Value("${user.profile.image.path}")
     private String imageUploadPath;
+    
 
     /**
      *
      * @author Pankaj Gosavi
      * @param userDto
      * @return
-     * @ApiNote This API is used to create user
+     * @apiNote This API is used to create user
      */
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
@@ -54,7 +61,7 @@ public class UserController {
      * @param userId
      * @param userDto
      * @return
-     * @ApiNote This API is used to Update user
+     * @apiNote This API is used to Update user
      */
     @PutMapping("/{userId}/userId") //url change
     public ResponseEntity<UserDto> updateUser(@Valid @PathVariable("userId") String userId, @RequestBody UserDto userDto) {
@@ -68,7 +75,7 @@ public class UserController {
      * @author Pankaj Gosavi
      * @param userId
      * @return
-     * @ApiNote This API is used to Delete user
+     * @apiNote This API is used to Delete user
      */
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponseMessage> deleteUser(@PathVariable String userId) {
@@ -87,7 +94,7 @@ public class UserController {
     /**
      * @author Pankaj Gosavi
      * @return
-     * @ApiNote This API is used to GetAllUser Information
+     * @apiNote This API is used to GetAllUser Information
      */
     @GetMapping
     public ResponseEntity<PageableResponse<UserDto>> getAllUsers( //app constants
@@ -104,7 +111,7 @@ public class UserController {
      * @author Pankaj Gosavi
      * @param userId
      * @return
-     * @ApiNote This API is used to Get Single User by Id
+     * @apiNote This API is used to Get Single User by Id
      */
     @GetMapping("/{userId}")
 
@@ -117,7 +124,7 @@ public class UserController {
      * @author Pankaj Gosavi
      * @param email
      * @return
-     * @ApiNote This API is used to Get User By Email
+     * @apiNote This API is used to Get User By Email
      */
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDto> getUser(@PathVariable String email) {
@@ -132,20 +139,21 @@ public class UserController {
      */
     @GetMapping("/search/{keywords}")
     public ResponseEntity<List<UserDto>> searchUser(@PathVariable String keywords) {
-        log.info("Request for service layer to seach user by keywords {}", keywords);
+        log.info("Request for service layer to search user by keywords {}", keywords);
 
         return new ResponseEntity<>(userService.searchUser(keywords), HttpStatus.OK);
     }
 
     /**
      * @author Pankaj Gosavi
+     * @apiNote this api is to upload user image
      * @param image
      * @param userId
      * @return
      * @throws IOException
      */
-    @PostMapping("/image/{userId}") // userimage appconstnst
-    public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam(ApiConstants.USER_IMAGE) MultipartFile image, @PathVariable String userId) throws IOException {
+    @PostMapping("/image/{userId}") // user image app constant
+    public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile image, @PathVariable String userId) throws IOException {
         {
             String imageName = fileService.uploadFile(image, imageUploadPath);
             UserDto user = userService.getUserById(userId);
@@ -154,5 +162,20 @@ public class UserController {
             ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).success(true).status(HttpStatus.CREATED).build();
             return new ResponseEntity<>(imageResponse, HttpStatus.CREATED);
         }
+
+        /**
+         * @author Pankaj Gosavi
+         * @apiNote this api is to serve user image
+         * @param image
+         * @param userId
+         * @throws IOException
+         */
+    }
+    @GetMapping("/image/{userId}")
+    public void serveUserImage(@PathVariable String userId,HttpServletResponse response) throws IOException {
+        UserDto user = userService.getUserById(userId);
+        InputStream resource = fileService.getResource(imageUploadPath, user.getImageName());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
     }
 }
