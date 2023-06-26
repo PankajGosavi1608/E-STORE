@@ -8,6 +8,8 @@ import com.mobicool.e.store.helper.Helper;
 import com.mobicool.e.store.repository.ProductRepo;
 import com.mobicool.e.store.service.ProductService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepo productRepo;
     @Autowired
     private ModelMapper mapper;
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Override
     public ProductDto create(ProductDto productDto) {
         Product product = mapper.map(productDto, Product.class);
@@ -43,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto update(ProductDto productDto, String productId) {
         //fetch product of given id
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product Not Found of Given Id"));
+        logger.info("Starting request to update product");
         product.setTitle(productDto.getTitle());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
@@ -54,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
         //save entity
         Product updatedProduct = productRepo.save(product);
+        logger.info("Complete request to update product");
 
         return mapper.map(updatedProduct,ProductDto.class);
     }
@@ -61,13 +66,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(String productId) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product Not Found of Given Id"));
+        logger.info("Complete request to Delete product");
         productRepo.delete(product);
     }
 
     @Override
     public ProductDto get(String productId) {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product Not Found of Given Id"));
-
+        logger.info("Starting request to get product");
         return mapper.map(product,ProductDto.class);
     }
 
@@ -75,24 +81,33 @@ public class ProductServiceImpl implements ProductService {
     public PageableResponse<ProductDto> getAll(int pageNumber,int pageSize, String sortBy,String sortDir) {
 
         Sort sort=(sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
+        logger.info("Starting request to get all product");
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Product> page = productRepo.findAll(pageable);
+        logger.info("Complete request to get all product");
         return Helper.getPageableResponse(page,ProductDto.class);
     }
 
     @Override
     public PageableResponse <ProductDto> getAllLive(int pageNumber,int pageSize, String sortBy,String sortDir) {
         Sort sort=(sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
+        logger.info("Starting request to get all live product");
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Product> page = productRepo.findByLiveTrue(pageable);
+        logger.info("Complete request to get all live product");
+
         return Helper.getPageableResponse(page,ProductDto.class);
     }
 
     @Override
     public PageableResponse <ProductDto> searchByTitle(String subTitle,int pageNumber,int pageSize, String sortBy,String sortDir) {
             Sort sort=(sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
-            Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        logger.info("Starting request to get product by title");
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
             Page<Product> page = productRepo.findByTitleContaining(subTitle,pageable);
+        logger.info("Complete request to get product by title");
             return Helper.getPageableResponse(page,ProductDto.class);
     }
-}
+    }
+    //All changes done
+

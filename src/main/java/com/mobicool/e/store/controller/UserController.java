@@ -83,7 +83,7 @@ public class UserController {
         userService.deleteUser(userId);
         ApiResponseMessage message = ApiResponseMessage
                 .builder()
-                .message("User is deleted Sucessfully!!  ")
+                .message(ApiConstants.USER_DELETED)
                 .success(true).
                 status(HttpStatus.OK)
                 .build();

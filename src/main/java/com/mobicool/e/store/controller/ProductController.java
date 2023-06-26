@@ -1,19 +1,21 @@
 package com.mobicool.e.store.controller;
 
-import com.mobicool.e.store.dto.ApiResponseMessage;
-import com.mobicool.e.store.dto.ImageResponse;
-import com.mobicool.e.store.dto.PageableResponse;
-import com.mobicool.e.store.dto.ProductDto;
+import com.mobicool.e.store.dto.*;
+import com.mobicool.e.store.helper.ApiConstants;
 import com.mobicool.e.store.service.FileService;
 import com.mobicool.e.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("/products")
@@ -72,7 +74,10 @@ public class ProductController {
     public ResponseEntity <ApiResponseMessage> delete(@PathVariable String productId)
     {
         productService.delete(productId);
-        ApiResponseMessage responseMessage = ApiResponseMessage.builder().message("Product is deleted Successfully").status(HttpStatus.OK).success(true).build();
+        ApiResponseMessage responseMessage = ApiResponseMessage.builder()
+                                             .message(ApiConstants.PRODUCT_DELETED)
+                                             .status(HttpStatus.OK)
+                                             .success(true).build();
         return new ResponseEntity<>(responseMessage,HttpStatus.OK);
     }
 
@@ -183,8 +188,24 @@ public class ProductController {
         productDto.setProductImageName(fileName);
         ProductDto updatedProduct = productService.update(productDto, productId);
         ImageResponse response = ImageResponse.builder().imageName(updatedProduct.getProductImageName())
-                .message("Product image is successfully Uploaded").status(HttpStatus.CREATED).success(true).build();
+                .message(ApiConstants.PRODUCT_IMAGE_UPLOAD).status(HttpStatus.CREATED).success(true).build();
         return new ResponseEntity<>(response,HttpStatus.CREATED);
+    }
+
+    /**
+     * @author Pankaj Gosavi
+     * @apiNote this api is to serve Product image
+     * @param productId
+     * @param response
+     * @throws IOException
+     */
+
+    @GetMapping("/image/{productId}")
+    public void serveProductImage(@PathVariable String productId, HttpServletResponse response) throws IOException {
+        ProductDto product = productService.get(productId);
+        InputStream resource = fileService.getResource(imagePath, product.getProductImageName());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
     }
 
 }

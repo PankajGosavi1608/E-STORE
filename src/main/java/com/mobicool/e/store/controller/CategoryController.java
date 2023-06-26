@@ -3,9 +3,14 @@ package com.mobicool.e.store.controller;
 import com.mobicool.e.store.dto.ApiResponseMessage;
 import com.mobicool.e.store.dto.CategoryDto;
 import com.mobicool.e.store.dto.PageableResponse;
+import com.mobicool.e.store.helper.ApiConstants;
 import com.mobicool.e.store.helper.ApiResponse;
 import com.mobicool.e.store.service.CategoryService;
+import com.mobicool.e.store.service.FileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,12 @@ public class CategoryController
 {
     @Autowired
     private CategoryService categoryService;
+    @Value("${user.profile.image.path}")
+    private String imageUploadPath;
+
+    @Autowired
+    private FileService fileService;
+    private Logger logger= LoggerFactory.getLogger(CategoryController.class);
 
     // create
     /**
@@ -65,7 +76,8 @@ public class CategoryController
     {
         categoryService.delete(categoryId);
 
-        ApiResponseMessage responseMessage = ApiResponseMessage.builder().message("category deleted successfully").status(HttpStatus.OK).success(true).build();
+        ApiResponseMessage responseMessage = ApiResponseMessage.builder()
+                .message(ApiConstants.CATEGORY_DELETED).status(HttpStatus.OK).success(true).build();
         return new ResponseEntity<>(responseMessage,HttpStatus.OK);
     }
 
@@ -109,4 +121,43 @@ public class CategoryController
        // return new ResponseEntity.ok(categoryDto);
 
     }
+
+    /**
+     * @author Pankaj Gosavi
+     * @param image
+     * @param categoryId
+     * @return
+     * @throws IOException
+     */
+    /*@PostMapping("/image/{categoryId}")
+    public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("catImage") MultipartFile image, @PathVariable String categoryId) throws IOException {
+        {
+            logger.info("Request Starting for fileservice layer to upload image with categoryId {}", categoryId);
+            String imageName = fileService.uploadFile(image, imageUploadPath);
+            CategoryDto category = categoryService.getcategory(categoryId);
+            category.setCoverImage(imageName);
+            CategoryDto categoryDto = categoryService.updatecategory(category, categoryId);
+            ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).message("File Uploaded").success(true).status(HttpStatus.CREATED).build();
+            logger.info("Request Completed for fileservice layer to upload image with categoryId: {}", categoryId);
+            return new ResponseEntity<>(imageResponse, HttpStatus.CREATED);
+        }
+    }
+
+    /**
+     * @author Pankaj Gosavi
+     * @param categoryId
+     * @param response
+     * @throws IOException
+     */
+    //Serve User Image
+    /*@GetMapping("/image/{categoryId}")
+    public void serveUserImage(@PathVariable String categoryId, HttpServletResponse response) throws IOException {
+        CategoryDto category = categoryService.getcategory(categoryId);
+        logger.info("User Image Name: {}",category.getCoverImage());
+        InputStream resource = fileService.getResource(imageUploadPath,category.getCoverImage());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
+
+    }*/
+
 }
