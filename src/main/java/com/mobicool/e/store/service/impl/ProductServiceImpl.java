@@ -8,6 +8,8 @@ import com.mobicool.e.store.helper.Helper;
 import com.mobicool.e.store.repository.ProductRepo;
 import com.mobicool.e.store.service.ProductService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepo productRepo;
     @Autowired
     private ModelMapper mapper;
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Override
     public ProductDto create(ProductDto productDto) {
         Product product = mapper.map(productDto, Product.class);
